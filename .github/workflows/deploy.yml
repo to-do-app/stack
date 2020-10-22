@@ -1,0 +1,70 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment Name'
+        required: true
+        default: 'production'
+      region:
+        description: 'AWS Region'
+        required: true
+        default: 'eu-central-1'
+      availability-zone: 
+        description: 'AWS Availability Zone'
+        required: true
+        default: 'eu-central-1a'
+      instance-image:
+        description: 'AWS Instance AMI'
+        required: true
+        default: 'ami-00a205cb8e06c3c4e'
+      instance-type:
+        description: 'AWS Instance type'
+        required: true
+        default: 't2.micro'
+      instance-key-pair-name:
+        description: 'AWS Instance SSH Key Pair name'
+        required: true
+        default: 'ec2-user'
+      instance-volume-size:
+        description: 'AWS Instance volume size'
+        required: true
+        default: '8'
+
+jobs:
+  deploy:
+    name: Deploy stack to AWS
+    runs-on: [self-hosted, builder]
+    outputs:
+      env-name: ${{ steps.env-name.outputs.environment }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      id: creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ github.event.inputs.region}}
+
+    - name: Configure environment name
+      id: env-name
+      run: |
+        echo "Environment name: ${{ github.event.inputs.environment }}"
+        echo "::set-output name=environment::${{ github.event.inputs.environment }}"
+
+    - name: Deploy To-do app
+      uses: aws-actions/aws-cloudformation-github-deploy@master
+      with:
+        name: stack-${{ steps.env-name.outputs.environment }}
+        template: ../stack.yaml
+        no-fail-on-empty-changeset: "1"
+        parameter-overrides: >-
+          AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
+          ImageParameter=${{ github.event.inputs.instance-image }},
+          InstanceTypeParameter=${{ github.event.inputs.instance-type }},
+          KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
+          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
