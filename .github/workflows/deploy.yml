@@ -36,8 +36,6 @@ jobs:
   deploy:
     name: Deploy stack to AWS
     runs-on: [self-hosted, builder]
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -50,21 +48,15 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ github.event.inputs.region}}
 
-    - name: Configure environment name
-      id: env-name
-      run: |
-        echo "Environment name: ${{ github.event.inputs.environment }}"
-        echo "::set-output name=environment::${{ github.event.inputs.environment }}"
-
     - name: Deploy To-do app
       uses: aws-actions/aws-cloudformation-github-deploy@master
       with:
-        name: stack-${{ steps.env-name.outputs.environment }}
+        name: stack-${{ github.event.inputs.environment }}
         template: ../../stack.yaml
         no-fail-on-empty-changeset: "1"
-        # parameter-overrides: >-
-        #   AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
-        #   ImageParameter=${{ github.event.inputs.instance-image }},
-        #   InstanceTypeParameter=${{ github.event.inputs.instance-type }},
-        #   KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
-        #   VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
+        parameter-overrides: >-
+          AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
+          ImageParameter=${{ github.event.inputs.instance-image }},
+          InstanceTypeParameter=${{ github.event.inputs.instance-type }},
+          KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
+          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
