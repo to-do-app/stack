@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment Name'
+        description: 'Environment'
         required: true
         default: 'production'
       region:
@@ -56,15 +56,15 @@ jobs:
         echo "Environment name: ${{ github.event.inputs.environment }}"
         echo "::set-output name=environment::${{ github.event.inputs.environment }}"
 
-    - name: Deploy To-do app
-      uses: aws-actions/aws-cloudformation-github-deploy@master
-      with:
-        name: stack-${{ steps.env-name.outputs.environment }}
-        template: ../stack.yaml
-        no-fail-on-empty-changeset: "1"
-        parameter-overrides: >-
-          AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
-          ImageParameter=${{ github.event.inputs.instance-image }},
-          InstanceTypeParameter=${{ github.event.inputs.instance-type }},
-          KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
-          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
+    # - name: Deploy To-do app
+    #   uses: aws-actions/aws-cloudformation-github-deploy@master
+    #   with:
+    #     name: stack-${{ steps.env-name.outputs.environment }}
+    #     template: ../stack.yaml
+    #     no-fail-on-empty-changeset: "1"
+    #     parameter-overrides: >-
+    #       AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
+    #       ImageParameter=${{ github.event.inputs.instance-image }},
+    #       InstanceTypeParameter=${{ github.event.inputs.instance-type }},
+    #       KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
+    #       VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
