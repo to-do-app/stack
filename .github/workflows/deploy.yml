@@ -52,11 +52,11 @@ jobs:
       uses: aws-actions/aws-cloudformation-github-deploy@master
       with:
         name: stack-${{ github.event.inputs.environment }}
-        # template: ../../stack.yaml
-        # no-fail-on-empty-changeset: "1"
-        # parameter-overrides: >-
-        #   AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
-        #   ImageParameter=${{ github.event.inputs.instance-image }},
-        #   InstanceTypeParameter=${{ github.event.inputs.instance-type }},
-        #   KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
-        #   VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
+        template: stack.yaml
+        no-fail-on-empty-changeset: "1"
+        parameter-overrides: >-
+          AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
+          ImageParameter=${{ github.event.inputs.instance-image }},
+          InstanceTypeParameter=${{ github.event.inputs.instance-type }},
+          KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
+          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
