@@ -49,10 +49,11 @@ jobs:
         aws-region: ${{ github.event.inputs.region}}
 
     - name: Deploy To-do app
-      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
       with:
         name: stack-${{ github.event.inputs.environment }}
         template: stack.yml
+        role-arn: arn:aws:iam::${{ steps.creds.outputs.aws-account-id }}:role/github-actions-cloudformation-stack-role
         no-fail-on-empty-changeset: "1"
         parameter-overrides: >-
           AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
