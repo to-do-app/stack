@@ -37,7 +37,7 @@ jobs:
     name: Deploy stack to AWS
     runs-on: [self-hosted, builder]
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Configure AWS credentials
@@ -49,10 +49,10 @@ jobs:
         aws-region: ${{ github.event.inputs.region}}
 
     - name: Deploy To-do app
-      uses: aws-actions/aws-cloudformation-github-deploy@master
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
         name: stack-${{ github.event.inputs.environment }}
-        template: stack.yaml
+        template: stack.yml
         no-fail-on-empty-changeset: "1"
         parameter-overrides: >-
           AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
