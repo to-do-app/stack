@@ -52,9 +52,14 @@ jobs:
 
     - name: Configure environment name
       id: env-name
+      env:
+        REPO: ${{ github.repository }}
       run: |
-        echo "Environment name: ${{ github.event.inputs.environment }}"
-        echo "::set-output name=environment::${{ github.event.inputs.environment }}"
+        ENVIRONMENT=`echo $REPO | tr "/" "-"`
+        echo "Environment name: $ENVIRONMENT"
+        echo "::set-output name=environment::$ENVIRONMENT"
+        # echo "Environment name: ${{ github.event.inputs.environment }}"
+        # echo "::set-output name=environment::${{ github.event.inputs.environment }}"
 
     - name: Deploy To-do app
       uses: aws-actions/aws-cloudformation-github-deploy@master
