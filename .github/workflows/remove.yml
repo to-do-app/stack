@@ -29,6 +29,4 @@ jobs:
         aws-region: ${{ github.event.inputs.region}}
 
     - name: Remove To-do app
-      run: |
-        docker network create to-do-app || true
-        aws cloudformation delete-stack --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
+      run: aws cloudformation delete-stack --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
