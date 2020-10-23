@@ -51,7 +51,7 @@ jobs:
     - name: Deploy To-do app
       uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
       with:
-        name: stack-${{ github.event.inputs.environment }}
+        name: stack-to-do-app-${{ github.event.inputs.environment }}
         template: stack.yml
         no-fail-on-empty-changeset: "1"
         parameter-overrides: >-

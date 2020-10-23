@@ -1,0 +1,34 @@
+name: Remove
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        required: true
+        default: 'production'
+      region:
+        description: 'AWS Region'
+        required: true
+        default: 'eu-central-1'
+
+jobs:
+  remove:
+    name: Delete stack from AWS
+    runs-on: [self-hosted, builder]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      id: creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ github.event.inputs.region}}
+
+    - name: Remove To-do app
+      run: |
+        docker network create to-do-app || true
+        aws cloudformation delete-stack --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
