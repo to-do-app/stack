@@ -36,13 +36,6 @@ Resources:
       EnableDnsSupport: false
       EnableDnsHostnames: false
 
-  Subnet:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref Vpc
-      CidrBlock: 10.0.0.0/20
-      AvailabilityZone: !Ref AvailabilityZoneParameter
-
   InternetGateway:
     Type: AWS::EC2::InternetGateway
 
@@ -51,6 +44,14 @@ Resources:
     Properties:
       VpcId: !Ref Vpc
       InternetGatewayId: !Ref InternetGateway
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Ref AvailabilityZoneParameter
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
 
   RouteTable:
     Type: AWS::EC2::RouteTable
@@ -70,41 +71,6 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTable
-
-  Role: 
-    Type: AWS::IAM::Role
-    Properties: 
-      AssumeRolePolicyDocument: 
-        Version: 2012-10-17
-        Statement: 
-        - Effect: Allow
-          Principal: 
-            Service: ec2.amazonaws.com
-          Action: sts:AssumeRole
-      Path: /
-
-  Policy: 
-    Type: AWS::IAM::Policy
-    Properties: 
-      PolicyName: role-to-do-app
-      PolicyDocument: 
-        Version: 2012-10-17
-        Statement: 
-          - Effect: Allow
-            Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-            Resource: "*"
-      Roles:
-        - !Ref Role
-
-  InstanceProfile: 
-    Type: AWS::IAM::InstanceProfile
-    Properties: 
-      Path: /
-      Roles:
-        - !Ref Role
 
   SshSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -185,6 +151,41 @@ Resources:
       NetworkInterfaceId: !Ref NetworkInterface
       AllocationId: !GetAtt ElasticIp.AllocationId
 
+  Role: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+        - Effect: Allow
+          Principal: 
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+
+  Policy: 
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: role-to-do-app
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "*"
+      Roles:
+        - !Ref Role
+
+  InstanceProfile: 
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Path: /
+      Roles:
+        - !Ref Role
+
   ToDoApp:
     Type: AWS::EC2::Instance
     Properties:
@@ -204,8 +205,8 @@ Resources:
           #!/bin/bash -xe
           /opt/aws/bin/cfn-init -v --region ${AWS::Region} --stack ${AWS::StackName} --resource ToDoApp
           /opt/aws/bin/cfn-signal -e $? --region ${AWS::Region} --stack ${AWS::StackName} --resource ToDoApp
-    # Metadata: 
-    #   AWS::CloudFormation::Init: 
-    #     config: 
-    #       commands:
-    #         update-packages: sudo yum update -y
+    Metadata: 
+      AWS::CloudFormation::Init: 
+        config: 
+          commands:
+            update-packages: sudo yum update -y
