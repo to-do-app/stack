@@ -3,6 +3,10 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template for the To-do app
 
 Parameters:
+  EnvironmentParameter: 
+    Type: String
+    Default: production
+
   AvailabilityZoneParameter: 
     Type: AWS::EC2::AvailabilityZone::Name
     Default: eu-central-1a
@@ -211,6 +215,7 @@ Resources:
             - update-packages
             - install-docker
             - install-docker-compose
+            - install-github-runner
         update-packages: 
           commands:
             0-update-packages: 
@@ -231,3 +236,27 @@ Resources:
               command: sudo chmod +x /usr/local/bin/docker-compose
             2-create-symbolic-link:
               command: sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+        install-github-runner:
+          commands:
+            0-create-runner-directory:
+              command: mkdir ${EnvironmentParameter}-actions-runner
+            1-enter-runner-directory:
+              command: cd ${EnvironmentParameter}-actions-runner
+            2-download-runner:
+              command: curl -O -L https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
+            3-extract-runner:
+              command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
+            4-configure-runner:
+              command: >- 
+                ./config.sh
+                --unattended
+                --url https://github.com/to-do-app
+                --token AGBMI2ZTVLQ2GFHIBRJ2SPK7SMDDQ
+                --name ${EnvironmentParameter}
+                --labels ${EnvironmentParameter}
+            5-install-runner-service:
+              command: sudo ./svc.sh install
+            6-start-runner-service:
+              command: sudo ./svc.sh start
+            7-leave-runner-directory:
+              command: cd
