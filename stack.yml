@@ -239,7 +239,7 @@ Resources:
         install-github-runner:
           commands:
             0-create-runner-directory:
-              command: mkdir ${EnvironmentParameter}-actions-runner
+              command: !Sub mkdir ${EnvironmentParameter}-actions-runner
             1-enter-runner-directory:
               command: cd ${EnvironmentParameter}-actions-runner
             2-download-runner:
