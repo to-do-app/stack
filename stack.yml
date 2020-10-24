@@ -202,11 +202,23 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
-          /opt/aws/bin/cfn-init -v --region ${AWS::Region} --stack ${AWS::StackName} --resource ToDoApp
+          /opt/aws/bin/cfn-init -v --configsets default --region ${AWS::Region} --stack ${AWS::StackName} --resource ToDoApp
           /opt/aws/bin/cfn-signal -e $? --region ${AWS::Region} --stack ${AWS::StackName} --resource ToDoApp
     Metadata: 
       AWS::CloudFormation::Init: 
-        config: 
+        configSets:
+          default:
+            - update-packages
+            - install-docker
+        update-packages: 
           commands:
-            update-packages: 
+            0-update-packages: 
               command: sudo yum update -y
+        install-docker: 
+          commands:
+            0-install-docker: 
+              command: sudo amazon-linux-extras install docker -y
+            1-start-docker-service: 
+              command: sudo service docker start
+            2-add-user-to-docker-group: 
+              command: sudo usermod -a -G docker ec2-user

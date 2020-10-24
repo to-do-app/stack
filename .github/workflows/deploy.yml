@@ -54,6 +54,7 @@ jobs:
         name: stack-to-do-app-${{ github.event.inputs.environment }}
         template: stack.yml
         no-fail-on-empty-changeset: "1"
+        disable-rollback: "1"
         parameter-overrides: >-
           AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
           ImageParameter=${{ github.event.inputs.instance-image }},
