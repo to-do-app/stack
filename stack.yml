@@ -210,6 +210,7 @@ Resources:
           default:
             - update-packages
             - install-docker
+            - install-docker-compose
         update-packages: 
           commands:
             0-update-packages: 
@@ -222,3 +223,11 @@ Resources:
               command: sudo service docker start
             2-add-user-to-docker-group: 
               command: sudo usermod -a -G docker ec2-user
+        install-docker-compose: 
+          commands:
+            0-download-docker-compose: 
+              command: sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            1-change-executable-permissions:
+              command: sudo chmod +x /usr/local/bin/docker-compose
+            2-create-symbolic-link:
+              command: sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
