@@ -208,4 +208,5 @@ Resources:
       AWS::CloudFormation::Init: 
         config: 
           commands:
-            update-packages: sudo yum update -y
+            update-packages: 
+              command: sudo yum update -y
