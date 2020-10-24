@@ -240,7 +240,6 @@ Resources:
           commands:
             0-create-runner-directory:
               command: !Sub mkdir ${EnvironmentParameter}-actions-runner
-              cwd: "~"
             1-enter-runner-directory:
               command: !Sub cd ${EnvironmentParameter}-actions-runner
             2-download-runner:
