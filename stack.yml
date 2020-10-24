@@ -240,14 +240,15 @@ Resources:
           commands:
             0-create-runner-directory:
               command: !Sub mkdir ${EnvironmentParameter}-actions-runner
+              cwd: "~"
             1-enter-runner-directory:
-              command: cd ${EnvironmentParameter}-actions-runner
+              command: !Sub cd ${EnvironmentParameter}-actions-runner
             2-download-runner:
               command: curl -O -L https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
             3-extract-runner:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
             4-configure-runner:
-              command: >- 
+              command: !Sub >- 
                 ./config.sh
                 --unattended
                 --url https://github.com/to-do-app
@@ -258,5 +259,3 @@ Resources:
               command: sudo ./svc.sh install
             6-start-runner-service:
               command: sudo ./svc.sh start
-            7-leave-runner-directory:
-              command: cd
