@@ -257,7 +257,6 @@ Resources:
                 --unattended
                 --url https://github.com/to-do-app
                 --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
-                --name ${EnvironmentParameter}
                 --labels ${EnvironmentParameter}
                 --replace
               env: 
