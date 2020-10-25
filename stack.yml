@@ -261,7 +261,7 @@ Resources:
                 --labels ${EnvironmentParameter}
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
-                TOKEN: !Sub curl -X POST -H "authorization: token ${GitHubTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token
+                TOKEN: !Sub "curl -X POST -H 'authorization: token ${GitHubTokenParameter}' https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token"
               cwd: !Sub ${EnvironmentParameter}-actions-runner
             4-install-runner-service:
               command: ./svc.sh install
