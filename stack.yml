@@ -31,6 +31,9 @@ Parameters:
     AllowedValues: 
       - 8
       - 16
+
+  GitHubAccessTokenParameter: 
+    Type: String
   
 Resources:
   Vpc:
@@ -251,13 +254,15 @@ Resources:
                 ./config.sh
                 --unattended
                 --url https://github.com/to-do-app
-                --token AGBMI2ZTVLQ2GFHIBRJ2SPK7SMDDQ
+                --token ${GitHubAccessTokenParameter}
                 --name ${EnvironmentParameter}
                 --labels ${EnvironmentParameter}
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            # 4-install-runner-service:
-            #   command: ./svc.sh install
-            # 5-start-runner-service:
-            #   command: ./svc.sh start
+            4-install-runner-service:
+              command: ./svc.sh install
+              cwd: !Sub ${EnvironmentParameter}-actions-runner
+            5-start-runner-service:
+              command: ./svc.sh start
+              cwd: !Sub ${EnvironmentParameter}-actions-runner

@@ -61,4 +61,5 @@ jobs:
           ImageParameter=${{ github.event.inputs.instance-image }},
           InstanceTypeParameter=${{ github.event.inputs.instance-type }},
           KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
-          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }}
+          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
+          GitHubAccessTokenParameter= ${{ secrets.GITHUB_ACCESS_TOKEN }}
