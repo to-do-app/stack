@@ -251,9 +251,7 @@ Resources:
             2-extract-runner:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            3-retrieve-token:
-              command: !Sub TOKEN=$(curl -X POST -H \"authorization: token ${GitHubTokenParameter}\" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
-            4-configure-runner:
+            3-configure-runner:
               command: !Sub >- 
                 ./config.sh
                 --unattended
@@ -263,10 +261,11 @@ Resources:
                 --labels ${EnvironmentParameter}
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
+                TOKEN: !Sub curl -X POST -H "authorization: token ${GitHubTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            5-install-runner-service:
+            4-install-runner-service:
               command: ./svc.sh install
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            6-start-runner-service:
+            5-start-runner-service:
               command: ./svc.sh start
               cwd: !Sub ${EnvironmentParameter}-actions-runner
