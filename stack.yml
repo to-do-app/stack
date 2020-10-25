@@ -254,12 +254,13 @@ Resources:
             3-configure-runner:
               command: !Sub >- 
                 ./config.sh
-                  --unattended
-                  --url https://github.com/to-do-app
-                  --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
-                  --name ${EnvironmentParameter}
-                  --labels ${EnvironmentParameter}
-                  --replace
+                --unattended
+                --url https://github.com/to-do-app
+                --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
+                --name ${EnvironmentParameter}
+                --labels ${EnvironmentParameter}
+                --work _work
+                --replace
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
               cwd: !Sub ${EnvironmentParameter}-actions-runner
