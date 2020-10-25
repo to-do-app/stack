@@ -244,17 +244,17 @@ Resources:
               command: !Sub cd ${EnvironmentParameter}-actions-runner
             2-download-runner:
               command: curl -O -L https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
-            3-extract-runner:
-              command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
-            4-configure-runner:
-              command: !Sub >- 
-                ./config.sh
-                --unattended
-                --url https://github.com/to-do-app
-                --token AGBMI2ZTVLQ2GFHIBRJ2SPK7SMDDQ
-                --name ${EnvironmentParameter}
-                --labels ${EnvironmentParameter}
-            5-install-runner-service:
-              command: sudo ./svc.sh install
-            6-start-runner-service:
-              command: sudo ./svc.sh start
+            # 3-extract-runner:
+            #   command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
+            # 4-configure-runner:
+            #   command: !Sub >- 
+            #     ./config.sh
+            #     --unattended
+            #     --url https://github.com/to-do-app
+            #     --token AGBMI2ZTVLQ2GFHIBRJ2SPK7SMDDQ
+            #     --name ${EnvironmentParameter}
+            #     --labels ${EnvironmentParameter}
+            # 5-install-runner-service:
+            #   command: sudo ./svc.sh install
+            # 6-start-runner-service:
+            #   command: sudo ./svc.sh start
