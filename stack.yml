@@ -251,7 +251,9 @@ Resources:
             2-extract-runner:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            3-configure-runner:
+            3a-test:
+              command: !Sub echo ${GitHubTokenParameter}
+            3b-configure-runner:
               command: !Sub >- 
                 ./config.sh
                 --unattended
