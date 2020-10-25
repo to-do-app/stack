@@ -32,7 +32,7 @@ Parameters:
       - 8
       - 16
 
-  GitHubAccessTokenParameter: 
+  ActionsRunnerTokenParameter: 
     Type: String
   
 Resources:
@@ -254,7 +254,7 @@ Resources:
                 ./config.sh
                 --unattended
                 --url https://github.com/to-do-app
-                --token ${GitHubAccessTokenParameter}
+                --token ${ActionsRunnerTokenParameter}
                 --name ${EnvironmentParameter}
                 --labels ${EnvironmentParameter}
               env: 

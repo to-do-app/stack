@@ -62,4 +62,4 @@ jobs:
           InstanceTypeParameter=${{ github.event.inputs.instance-type }},
           KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
           VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
-          GitHubAccessTokenParameter=${{ secrets.GITHUB_ACCESS_TOKEN }}
+          ActionsRunnerTokenParameter=${{ secrets.ACTIONS_RUNNER_TOKEN }}
