@@ -240,13 +240,12 @@ Resources:
           commands:
             0-create-runner-directory:
               command: !Sub mkdir ${EnvironmentParameter}-actions-runner
-            1-enter-runner-directory:
-              command: !Sub cd ${EnvironmentParameter}-actions-runner
-            2-download-runner:
+            1-download-runner:
               command: curl -O -L https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
-            # 3-extract-runner:
+              cwd: !Sub ${EnvironmentParameter}-actions-runner
+            # 2-extract-runner:
             #   command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
-            # 4-configure-runner:
+            # 3-configure-runner:
             #   command: !Sub >- 
             #     ./config.sh
             #     --unattended
@@ -254,7 +253,7 @@ Resources:
             #     --token AGBMI2ZTVLQ2GFHIBRJ2SPK7SMDDQ
             #     --name ${EnvironmentParameter}
             #     --labels ${EnvironmentParameter}
-            # 5-install-runner-service:
+            # 4-install-runner-service:
             #   command: sudo ./svc.sh install
-            # 6-start-runner-service:
+            # 5-start-runner-service:
             #   command: sudo ./svc.sh start
