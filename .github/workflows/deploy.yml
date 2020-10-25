@@ -48,9 +48,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ github.event.inputs.region}}
 
-    - name: test
-      run: echo ${{ secrets.GITHUB_TOKEN }} > DELETETHISFILE.txt
-
     - name: Deploy To-do app
       uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
       with:
@@ -65,4 +62,4 @@ jobs:
           InstanceTypeParameter=${{ github.event.inputs.instance-type }},
           KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
           VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
-          GitHubTokenParameter=${{ secrets.GITHUB_TOKEN }}
+          ActionsRunnerTokenParameter=${{ secrets.ACTIONS_RUNNER_TOKEN }}
