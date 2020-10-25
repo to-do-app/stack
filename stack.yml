@@ -259,7 +259,7 @@ Resources:
                   --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
                   --name ${EnvironmentParameter}
                   --labels ${EnvironmentParameter}
-                  --work _work
+                  --work "_work"
                   --replace
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
@@ -270,3 +270,11 @@ Resources:
             5-start-runner-service:
               command: ./svc.sh start
               cwd: !Sub ${EnvironmentParameter}-actions-runner
+
+# rm -rf production-actions-runner
+# mkdir production-actions-runner
+# cd production-actions-runner
+# curl -O -L https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
+# tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
+# ./config.sh --unattended --url https://github.com/to-do-app --token $(curl -X POST -H "authorization: token 42707a95617ed40ca514f419c7082f479e359031" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token) --name production --labels production --work "_work" --replace
+# cd ..
