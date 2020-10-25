@@ -219,23 +219,23 @@ Resources:
         update-packages: 
           commands:
             0-update-packages: 
-              command: sudo yum update -y
+              command: yum update -y
         install-docker: 
           commands:
             0-install-docker: 
-              command: sudo amazon-linux-extras install docker -y
+              command: amazon-linux-extras install docker -y
             1-start-docker-service: 
-              command: sudo service docker start
+              command: service docker start
             2-add-user-to-docker-group: 
-              command: sudo usermod -a -G docker ec2-user
+              command: usermod -a -G docker ec2-user
         install-docker-compose: 
           commands:
             0-download-docker-compose: 
-              command: sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              command: curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             1-change-executable-permissions:
-              command: sudo chmod +x /usr/local/bin/docker-compose
+              command: chmod +x /usr/local/bin/docker-compose
             2-create-symbolic-link:
-              command: sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+              command: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
         install-github-runner:
           commands:
             0-create-runner-directory:
@@ -258,6 +258,6 @@ Resources:
                 RUNNER_ALLOW_RUNASROOT: 1
               cwd: !Sub ${EnvironmentParameter}-actions-runner
             # 4-install-runner-service:
-            #   command: sudo ./svc.sh install
+            #   command: ./svc.sh install
             # 5-start-runner-service:
-            #   command: sudo ./svc.sh start
+            #   command: ./svc.sh start
