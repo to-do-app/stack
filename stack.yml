@@ -259,6 +259,7 @@ Resources:
                 --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
                 --name ${EnvironmentParameter}
                 --labels ${EnvironmentParameter}
+                --replace
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
               cwd: !Sub ${EnvironmentParameter}-actions-runner
@@ -268,3 +269,4 @@ Resources:
             5-start-runner-service:
               command: ./svc.sh start
               cwd: !Sub ${EnvironmentParameter}-actions-runner
+
