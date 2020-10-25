@@ -251,9 +251,7 @@ Resources:
             2-extract-runner:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-            3a-test:
-              command: !Sub echo ${ActionsRunnerTokenParameter}
-            3b-configure-runner:
+            3-configure-runner:
               command: !Sub >- 
                 ./config.sh
                 --unattended
@@ -270,3 +268,5 @@ Resources:
             5-start-runner-service:
               command: ./svc.sh start
               cwd: !Sub ${EnvironmentParameter}-actions-runner
+
+./config.sh --unattended --url https://github.com/to-do-app --token AGBMI23QUGRDCYWIZLGXTBC7SWXLY --name production --labels production
