@@ -27,7 +27,7 @@ Parameters:
 
   VolumeSizeParameter: 
     Type: Number
-    Default: 8
+    Default: 16
     AllowedValues: 
       - 8
       - 16

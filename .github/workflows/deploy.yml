@@ -30,7 +30,7 @@ on:
       instance-volume-size:
         description: 'AWS Instance volume size'
         required: true
-        default: '8'
+        default: '16'
 
 jobs:
   deploy:
