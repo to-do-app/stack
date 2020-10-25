@@ -215,7 +215,7 @@ Resources:
       AWS::CloudFormation::Init: 
         configSets:
           default:
-            - update-packages
+            - update-and-install-packages
             - install-docker
             - install-docker-compose
             - install-github-runner
