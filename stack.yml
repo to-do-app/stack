@@ -252,7 +252,7 @@ Resources:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
               cwd: !Sub ${EnvironmentParameter}-actions-runner
             3-configure-runner:
-              command: !Sub ./config.sh --unattended --url https://github.com/to-do-app --token $(curl -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token) --name ${EnvironmentParameter} --labels ${EnvironmentParameter} --replace
+              command: !Sub "./config.sh --unattended --url https://github.com/to-do-app --token $(curl -X POST -H 'authorization: token ${ActionsRunnerTokenParameter}' https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token) --name ${EnvironmentParameter} --labels ${EnvironmentParameter} --replace"
               env: 
                 RUNNER_ALLOW_RUNASROOT: 1
               cwd: !Sub ${EnvironmentParameter}-actions-runner
