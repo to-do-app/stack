@@ -252,11 +252,7 @@ Resources:
               command: tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
               cwd: !Sub ${EnvironmentParameter}-actions-runner
             3-retrieve-runner-token:
-              command: !Sub "TOKEN=$(curl -X POST -H 'authorization: token ${GitHubTokenParameter}' https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)"
-            3b-echo-runner-token:
-              command: echo $TOKEN
-            3c-echo-runner-token:
-              command: echo "$TOKEN"
+              command: !Sub "TOKEN=$(curl -X POST -H 'authorization: token ${GitHubTokenParameter}' https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token); echo $TOKEN"
             4-configure-runner:
               command: !Sub >- 
                 ./config.sh
