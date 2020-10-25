@@ -268,5 +268,3 @@ Resources:
             5-start-runner-service:
               command: ./svc.sh start
               cwd: !Sub ${EnvironmentParameter}-actions-runner
-
-./config.sh --unattended --url https://github.com/to-do-app --token AGBMI23QUGRDCYWIZLGXTBC7SWXLY --name production --labels production
