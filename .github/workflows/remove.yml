@@ -32,6 +32,6 @@ jobs:
       run: |
         aws ssm send-command \
           --document-name "RemoveGitHubRunnerDocument" \
-          --targets "Key=InstanceName,Values=ToDoApp"
+          --targets "Key=tag:InstanceName,Values=ToDoApp"
         aws cloudformation delete-stack \
           --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
