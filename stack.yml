@@ -231,18 +231,19 @@ Resources:
             https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
           tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
           export RUNNER_ALLOW_RUNASROOT=true
+          export TOKEN=$(\
+            curl \
+              -X \
+              POST \
+              -H "authorization: token ${ActionsRunnerTokenParameter}" \
+              https://api.github.com/orgs/to-do-app/actions/runners/registration-token \
+            | \
+            jq -r .token\
+          )
           ./config.sh \
             --unattended \
             --url https://github.com/to-do-app \
-            --token $(\
-              curl \
-                -X \
-                POST \
-                -H "authorization: token ${ActionsRunnerTokenParameter}" \
-                https://api.github.com/orgs/to-do-app/actions/runners/registration-token \
-              | \
-              jq -r .token\
-            ) \
+            --token $TOKEN \
             --name ${EnvironmentParameter} \
             --labels ${EnvironmentParameter} \
             --replace
