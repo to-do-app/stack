@@ -250,6 +250,9 @@ Resources:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
+      Tags:
+        - Key: Name
+          Value: RemoveGitHubRunnerDocument
       Content:
         schemaVersion: "2.2"
         mainSteps:
