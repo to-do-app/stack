@@ -256,6 +256,7 @@ Resources:
         schemaVersion: "2.2"
         mainSteps:
           - action: "aws:runShellScript"
+            name: remove
             inputs:
               runCommand:
                 - cd ${EnvironmentParameter}-actions-runner
