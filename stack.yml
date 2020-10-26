@@ -206,8 +206,6 @@ Resources:
         - NetworkInterfaceId: !Ref NetworkInterface
           DeviceIndex: 0
       IamInstanceProfile: !Ref InstanceProfile
-      SsmAssociations:
-      - DocumentName: !Ref RemoveGitHubRunnerDocument
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
