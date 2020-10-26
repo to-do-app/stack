@@ -29,4 +29,6 @@ jobs:
         aws-region: ${{ github.event.inputs.region}}
 
     - name: Remove To-do app
-      run: aws cloudformation delete-stack --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
+      run: |
+        aws ssm send-command --targets "Key=Name,Values=RemoveGitHubRunnerDocument"
+        aws cloudformation delete-stack --stack-name stack-to-do-app-${{ github.event.inputs.environment }}

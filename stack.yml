@@ -195,6 +195,9 @@ Resources:
   ToDoApp:
     Type: AWS::EC2::Instance
     Properties:
+      Tags:
+        - Key: InstanceName
+          Value: ToDoApp
       ImageId: !Ref ImageParameter
       InstanceType: !Ref InstanceTypeParameter
       KeyName: !Ref KeyPairNameParameter
@@ -250,9 +253,6 @@ Resources:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
-      Tags:
-        - Key: Name
-          Value: RemoveGitHubRunnerDocument
       Content:
         schemaVersion: "2.2"
         mainSteps:
