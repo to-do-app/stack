@@ -248,21 +248,3 @@ Resources:
             --replace
           ./svc.sh install
           ./svc.sh start
-
-  RemoveGitHubRunnerDocument:
-    Type: AWS::SSM::Document
-    Properties:
-      Name: RemoveGitHubRunnerDocument
-      DocumentType: Command
-      Content:
-        schemaVersion: "2.2"
-        mainSteps:
-          - name: remove
-            action: "aws:runShellScript"
-            inputs:
-              runCommand:
-                - cd ${EnvironmentParameter}-actions-runner
-                - ./svc.sh stop
-                - ./svc.sh uninstall
-                - token=$(curl -s -X POST -H "authorization: token ${ActionsRunnerTokenParameter}" https://api.github.com/orgs/to-do-app/actions/runners/registration-token | jq -r .token)
-                - su ec2-user -c "./config.sh remove --token $token"

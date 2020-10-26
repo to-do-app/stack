@@ -30,8 +30,5 @@ jobs:
 
     - name: Remove To-do app
       run: |
-        aws ssm send-command \
-          --document-name "RemoveGitHubRunnerDocument" \
-          --targets "Key=tag:InstanceName,Values=ToDoApp"
-# aws cloudformation delete-stack \
-#   --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
+        aws cloudformation delete-stack \
+          --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
