@@ -250,14 +250,15 @@ Resources:
           ./svc.sh start
 
   RemoveGitHubRunnerDocument:
+    Name: RemoveGitHubRunnerDocument
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
       Content:
         schemaVersion: "2.2"
         mainSteps:
-          - action: "aws:runShellScript"
-            name: remove
+          - name: remove
+            action: "aws:runShellScript"
             inputs:
               runCommand:
                 - cd ${EnvironmentParameter}-actions-runner
