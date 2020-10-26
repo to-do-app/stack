@@ -250,9 +250,9 @@ Resources:
           ./svc.sh start
 
   RemoveGitHubRunnerDocument:
-    Name: RemoveGitHubRunnerDocument
     Type: AWS::SSM::Document
     Properties:
+      Name: RemoveGitHubRunnerDocument
       DocumentType: Command
       Content:
         schemaVersion: "2.2"
