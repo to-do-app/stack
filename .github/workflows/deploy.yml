@@ -7,6 +7,7 @@ on:
         description: 'Environment'
         required: true
         default: 'production'
+
       region:
         description: 'AWS Region'
         required: true
@@ -32,15 +33,50 @@ on:
         required: true
         default: '8'
 
+      mongo-port:
+        description: 'Mongo port'
+        required: true
+        default: '27017'
+      mongo-express-port:
+        description: 'Mongo Express port'
+        required: true
+        default: '8081'
+        
+      to-do-api-tag:
+        description: 'To-do API tag or version'
+        required: true
+        default: latest
+      to-do-api-port:
+        description: 'To-do API port'
+        required: true
+        default: '3000'
+      mongo-host:
+        description: 'Mongo host'
+        required: true
+        default: 'mongo'
+      mongo-port:
+        description: 'Mongo port'
+        required: true
+        default: '27017'
+        
+      to-do-fe-tag:
+        description: 'To-do FE tag or version'
+        required: true
+        default: latest
+      to-do-fe-port:
+        description: 'To-do FE port'
+        required: true
+        default: '80'
+
 jobs:
-  deploy:
-    name: Deploy stack to AWS
+  create:
+    name: Create stack
     runs-on: [self-hosted, builder]
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
+    - name: Configure credentials
       id: creds
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -48,7 +84,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ github.event.inputs.region}}
 
-    - name: Deploy To-do app
+    - name: Create stack
       uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
       with:
         name: stack-to-do-app-${{ github.event.inputs.environment }}
@@ -63,3 +99,78 @@ jobs:
           KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
           VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
           ActionsRunnerTokenParameter=${{ secrets.ACTIONS_RUNNER_TOKEN }}
+
+  deploy-to-do-mongo:
+    name: Deploy To-do Mongo
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: to-do-app/to-do-mongo
+        
+    - name: Deploy containers
+      env:
+        MONGO_PORT: ${{ github.event.inputs.mongo-port }}
+        MONGO_EXPRESS_PORT: ${{ github.event.inputs.mongo-express-port }}
+      run: |
+        docker network create network-to-do-app  || true
+        docker-compose pull
+        if [[ "${{ github.event.inputs.environment }}" = "production" ]]; then
+          docker-compose --file docker-compose.yml --file docker-compose.production.yml up --detach
+        else
+          docker-compose up --detach
+        fi
+        docker image prune --all --force
+
+  deploy-to-do-api:
+    name: Deploy To-do API
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: to-do-app/to-do-api
+        
+    - name: Deploy containers
+      env:
+        NODE_ENV: ${{ github.event.inputs.environment }}
+        TO_DO_API_TAG: ${{ github.event.inputs.to-do-api-tag }}
+        TO_DO_API_PORT: ${{ github.event.inputs.to-do-api-port }}
+        MONGO_HOST: ${{ github.event.inputs.mongo-host }}
+        MONGO_PORT: ${{ github.event.inputs.mongo-port }}
+      run: |
+        docker network create network-to-do-app || true
+        echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+        docker-compose pull
+        if [[ "${{ github.event.inputs.environment }}" = "production" ]]; then
+          docker-compose --file docker-compose.yml --file docker-compose.production.yml up --detach
+        else
+          docker-compose up --detach
+        fi
+        docker image prune --all --force
+
+    deploy-to-do-fe:
+      name: Deploy To-do FE
+      runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: to-do-app/to-do-fe
+        
+      - name: Deploy containers
+        env:
+          NODE_ENV: ${{ github.event.inputs.environment }}
+          TO_DO_FE_TAG: ${{ github.event.inputs.to-do-fe-tag }}
+          TO_DO_FE_PORT: ${{ github.event.inputs.to-do-fe-port }}
+        run: |
+          docker network create network-to-do-app || true
+          echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+          docker-compose pull
+          if [[ "${{ github.event.inputs.environment }}" = "production" ]]; then
+            docker-compose --file docker-compose.yml --file docker-compose.production.yml up --detach
+          else
+            docker-compose up --detach
+          fi
+          docker image prune --all --force
