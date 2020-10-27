@@ -1,4 +1,4 @@
-name: Remove
+name: Destroy stack
 
 on:
   workflow_dispatch:
@@ -13,14 +13,14 @@ on:
         default: 'eu-central-1'
 
 jobs:
-  remove:
+  destroy:
     name: Delete stack from AWS
     runs-on: [self-hosted, builder]
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
+    - name: Configure credentials
       id: creds
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -28,7 +28,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ github.event.inputs.region}}
 
-    - name: Remove To-do app
+    - name: Destroy stack
       run: |
         aws cloudformation delete-stack \
           --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
