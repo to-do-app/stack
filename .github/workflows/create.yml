@@ -7,7 +7,6 @@ on:
         description: 'Environment'
         required: true
         default: 'production'
-
       region:
         description: 'AWS Region'
         required: true
