@@ -32,7 +32,7 @@ Parameters:
       - 8
       - 16
 
-  ActionsRunnerTokenParameter: 
+  OrgAccessTokenParameter: 
     Type: String
   
 Resources:
@@ -218,24 +218,23 @@ Resources:
           service docker start
           usermod -a -G docker ec2-user
           curl \
-            -L \
-            -o /usr/local/bin/docker-compose \
+            --location \
+            --output /usr/local/bin/docker-compose \
             "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)"
           chmod +x /usr/local/bin/docker-compose
           ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
           mkdir ${EnvironmentParameter}-actions-runner
           cd ${EnvironmentParameter}-actions-runner
           curl \
-            -L \
-            -O \
+            --location \
+            --remote-name \
             https://github.com/actions/runner/releases/download/v2.273.5/actions-runner-linux-x64-2.273.5.tar.gz
           tar xzf ./actions-runner-linux-x64-2.273.5.tar.gz
           export RUNNER_ALLOW_RUNASROOT=true
           export TOKEN=$(\
             curl \
-              -X \
-              POST \
-              -H "authorization: token ${ActionsRunnerTokenParameter}" \
+              -X POST \
+              --header "Authorization: token ${OrgAccessTokenParameter}" \
               https://api.github.com/orgs/to-do-app/actions/runners/registration-token \
             | \
             jq -r .token\
