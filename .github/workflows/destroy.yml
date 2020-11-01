@@ -1,4 +1,4 @@
-name: Destroy stack
+name: Manual destroy
 
 on:
   workflow_dispatch:

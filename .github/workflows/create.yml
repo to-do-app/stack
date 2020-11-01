@@ -1,4 +1,4 @@
-name: Create stack
+name: Manual create
 
 on:
   workflow_dispatch:
@@ -63,3 +63,42 @@ jobs:
           KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
           VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
+
+  trigger-mongo-deploy:
+    needs: create
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Trigger Mongo repository_dispatch event
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/mongo/dispatches \
+            --data '{"event_type":"deploy"}'
+
+  trigger-api-deploy:
+    needs: create
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Trigger API repository_dispatch event
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/api/dispatches \
+            --data '{"event_type":"deploy"}'
+
+  trigger-front-end-deploy:
+    needs: create
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Trigger front-end repository_dispatch event
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/front-end/dispatches \
+            --data '{"event_type":"deploy"}'
