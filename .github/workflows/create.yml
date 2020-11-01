@@ -75,7 +75,12 @@ jobs:
             --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             --header "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/to-do-app/mongo/dispatches \
-            --data '{"event_type":"deploy"}'
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.inputs.environment }}"
+              }
+            }'
 
   trigger-api-deploy:
     needs: create
@@ -88,7 +93,12 @@ jobs:
             --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             --header "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/to-do-app/api/dispatches \
-            --data '{"event_type":"deploy"}'
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.inputs.environment }}"
+              }
+            }'
 
   trigger-front-end-deploy:
     needs: create
@@ -101,4 +111,9 @@ jobs:
             --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             --header "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/to-do-app/front-end/dispatches \
-            --data '{"event_type":"deploy"}'
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.inputs.environment }}"
+              }
+            }'
