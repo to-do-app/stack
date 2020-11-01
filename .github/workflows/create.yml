@@ -3,10 +3,6 @@ name: Manual create
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment'
-        required: true
-        default: 'production'
       region:
         description: 'AWS Region'
         required: true
@@ -15,22 +11,18 @@ on:
         description: 'AWS Availability Zone'
         required: true
         default: 'eu-central-1a'
-      instance-image:
-        description: 'AWS Instance AMI'
+      environment:
+        description: 'Environment'
         required: true
-        default: 'ami-00a205cb8e06c3c4e'
-      instance-type:
-        description: 'AWS Instance type'
+        default: 'production'
+      api-tag:
+        description: 'API tag or version'
         required: true
-        default: 't2.micro'
-      instance-key-pair-name:
-        description: 'AWS Instance SSH Key Pair name'
+        default: latest
+      front-end-tag:
+        description: 'Front-end tag or version'
         required: true
-        default: 'ec2-user'
-      instance-volume-size:
-        description: 'AWS Instance volume size'
-        required: true
-        default: '8'
+        default: latest
 
 jobs:
   create:
@@ -58,10 +50,10 @@ jobs:
         parameter-overrides: >-
           EnvironmentParameter=${{ github.event.inputs.environment }},
           AvailabilityZoneParameter=${{ github.event.inputs.availability-zone }},
-          ImageParameter=${{ github.event.inputs.instance-image }},
-          InstanceTypeParameter=${{ github.event.inputs.instance-type }},
-          KeyPairNameParameter=${{ github.event.inputs.instance-key-pair-name }},
-          VolumeSizeParameter=${{ github.event.inputs.instance-volume-size }},
+          ImageParameter=ami-00a205cb8e06c3c4e,
+          InstanceTypeParameter=t2.micro,
+          KeyPairNameParameter=ec2-user,
+          VolumeSizeParameter=8,
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
 
   trigger-mongo-deploy:
@@ -96,7 +88,8 @@ jobs:
             --data '{
               "event_type":"deploy",
               "client_payload": {
-                "environment": "${{ github.event.inputs.environment }}"
+                "environment": "${{ github.event.inputs.environment }}",
+                "tag": "${{ github.event.inputs.api-tag }}"
               }
             }'
 
@@ -114,6 +107,7 @@ jobs:
             --data '{
               "event_type":"deploy",
               "client_payload": {
-                "environment": "${{ github.event.inputs.environment }}"
+                "environment": "${{ github.event.inputs.environment }}",
+                "tag": "${{ github.event.inputs.front-end-tag }}"
               }
             }'
