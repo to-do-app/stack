@@ -216,11 +216,12 @@ Resources:
           #!/bin/bash -xe
           yum update -y
   
-          mkfs -t xfs /dev/xvdh || true
           mkdir /mongodb
           mkdir /mongodb/db
+          mkfs -t xfs /dev/xvdh || true
           echo "/dev/xvdh /mongodb/db  xfs  defaults,nofail 0 2" >> /etc/fstab
           mkdir /mongodb/configdb
+          mkfs -t xfs /dev/xvdi || true
           echo "/dev/xvdi /mongodb/configdb  xfs  defaults,nofail 0 2" >> /etc/fstab
           mount --all
 
