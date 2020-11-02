@@ -215,7 +215,9 @@ Resources:
           yum update -y
   
           mkfs -t xfs /dev/xvdh || true
-          mkdir /mongodb      
+          mkdir /mongodb
+          mkdir /mongodb/db
+          mkdir /mongodb/configdb
           echo "/dev/xvdh /mongodb  xfs  defaults,nofail 0 2" >> /etc/fstab
           mount --all
 
