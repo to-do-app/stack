@@ -220,7 +220,8 @@ Resources:
           mkdir /mongodb
           mkdir /mongodb/db
           mkdir /mongodb/configdb
-          echo "/dev/xvdh /mongodb  xfs  defaults,nofail 0 2" >> /etc/fstab
+          echo "/dev/xvdh /mongodb/db  xfs  defaults,nofail 0 2" >> /etc/fstab
+          echo "/dev/xvdi /mongodb/configdb  xfs  defaults,nofail 0 2" >> /etc/fstab
           mount --all
 
           amazon-linux-extras install docker -y
