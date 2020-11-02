@@ -192,26 +192,9 @@ Resources:
       Roles:
         - !Ref Role
 
-  MongoDbVolume:
-    Type: AWS::EC2::Volume
-    Properties:
-      Size: 1
-      AvailabilityZone: !GetAtt ToDoApp.AvailabilityZone
-    DeletionPolicy: Retain
-
-  VolumeAttachment:
-    Type: AWS::EC2::VolumeAttachment
-    Properties:
-      InstanceId: !Ref ToDoApp
-      VolumeId: !Ref MongoDbVolume
-      Device: /dev/sdh
-
   ToDoApp:
     Type: AWS::EC2::Instance
     Properties:
-      Tags:
-        - Key: InstanceName
-          Value: ToDoApp
       ImageId: !Ref ImageParameter
       InstanceType: !Ref InstanceTypeParameter
       KeyName: !Ref KeyPairNameParameter
@@ -222,6 +205,9 @@ Resources:
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref NetworkInterface
           DeviceIndex: 0
+      Volumes:
+        - Device: /dev/sdh
+          VolumeId: vol-0026fdf6eb3da2055
       IamInstanceProfile: !Ref InstanceProfile
       UserData:
         Fn::Base64: !Sub |
