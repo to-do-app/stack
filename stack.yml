@@ -208,7 +208,9 @@ Resources:
           DeviceIndex: 0
       Volumes:
         - Device: /dev/xvdh
-          VolumeId: vol-0026fdf6eb3da2055
+          VolumeId: vol-00ee38f022e5754b2
+        - Device: /dev/xvdi
+          VolumeId: vol-00ee38f022e5754b2
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
