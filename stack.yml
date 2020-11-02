@@ -219,8 +219,8 @@ Resources:
           mkfs -t xfs /dev/xvdh || true
           mkdir /mongodb
           mkdir /mongodb/db
-          mkdir /mongodb/configdb
           echo "/dev/xvdh /mongodb/db  xfs  defaults,nofail 0 2" >> /etc/fstab
+          mkdir /mongodb/configdb
           echo "/dev/xvdi /mongodb/configdb  xfs  defaults,nofail 0 2" >> /etc/fstab
           mount --all
 
