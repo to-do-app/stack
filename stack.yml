@@ -199,7 +199,7 @@ Resources:
       AvailabilityZone: !GetAtt ToDoApp.AvailabilityZone
     DeletionPolicy: Retain
 
-  MountPoint:
+  VolumeAttachment:
     Type: AWS::EC2::VolumeAttachment
     Properties:
       InstanceId: !Ref ToDoApp
@@ -230,7 +230,7 @@ Resources:
   
           mkfs -t xfs /dev/xvdh
           mkdir /mongodb      
-          echo "/dev/xvdh /mongodb  ext4  defaults,nofail 0 2" >> /etc/fstab
+          echo "/dev/xvdh /mongodb  xfs  defaults,nofail 0 2" >> /etc/fstab
           mount -a
 
           amazon-linux-extras install docker -y
