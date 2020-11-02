@@ -192,6 +192,20 @@ Resources:
       Roles:
         - !Ref Role
 
+  MongoDbVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: 1
+      AvailabilityZone: !GetAtt ToDoApp.AvailabilityZone
+    DeletionPolicy: Retain
+
+  MountPoint:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      InstanceId: !Ref ToDoApp
+      VolumeId: !Ref MongoDbVolume
+      Device: /dev/sdh
+
   ToDoApp:
     Type: AWS::EC2::Instance
     Properties:
@@ -213,7 +227,7 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
           yum update -y
-          yum install jq -y
+
           amazon-linux-extras install docker -y
           service docker start
           usermod -a -G docker ec2-user
@@ -223,6 +237,8 @@ Resources:
             "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)"
           chmod +x /usr/local/bin/docker-compose
           ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+          yum install jq -y
           mkdir ${EnvironmentParameter}-actions-runner
           cd ${EnvironmentParameter}-actions-runner
           curl \
