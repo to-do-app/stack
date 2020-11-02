@@ -202,13 +202,13 @@ Resources:
         - DeviceName: /dev/xvda
           Ebs:
             VolumeSize: !Ref VolumeSizeParameter
+      IamInstanceProfile: !Ref InstanceProfile
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref NetworkInterface
           DeviceIndex: 0
       Volumes:
-        - Device: /dev/sdh
+        - Device: /dev/xvdh
           VolumeId: vol-0026fdf6eb3da2055
-      IamInstanceProfile: !Ref InstanceProfile
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
@@ -217,7 +217,7 @@ Resources:
           mkfs -t xfs /dev/xvdh
           mkdir /mongodb      
           echo "/dev/xvdh /mongodb  xfs  defaults,nofail 0 2" >> /etc/fstab
-          mount -a
+          mount --all
 
           amazon-linux-extras install docker -y
           service docker start
