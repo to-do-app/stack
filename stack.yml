@@ -227,6 +227,11 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
           yum update -y
+  
+          mkfs -t xfs /dev/xvdh
+          mkdir /mongodb      
+          echo "/dev/xvdh /mongodb  ext4  defaults,nofail 0 2" >> /etc/fstab
+          mount -a
 
           amazon-linux-extras install docker -y
           service docker start
