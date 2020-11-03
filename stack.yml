@@ -28,9 +28,6 @@ Parameters:
   VolumeSizeParameter: 
     Type: Number
     Default: 8
-    AllowedValues: 
-      - 8
-      - 16
 
   OrgAccessTokenParameter: 
     Type: String
@@ -206,24 +203,10 @@ Resources:
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref NetworkInterface
           DeviceIndex: 0
-      Volumes:
-        - Device: /dev/xvdh
-          VolumeId: vol-00ee38f022e5754b2
-        - Device: /dev/xvdi
-          VolumeId: vol-0cae6019da999dc40
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
           yum update -y
-  
-          mkdir /mongodb
-          mkdir /mongodb/db
-          mkfs -t xfs /dev/xvdh || true
-          echo "/dev/xvdh /mongodb/db  xfs  defaults,nofail 0 2" >> /etc/fstab
-          mkdir /mongodb/configdb
-          mkfs -t xfs /dev/xvdi || true
-          echo "/dev/xvdi /mongodb/configdb  xfs  defaults,nofail 0 2" >> /etc/fstab
-          mount --all
 
           amazon-linux-extras install docker -y
           service docker start
