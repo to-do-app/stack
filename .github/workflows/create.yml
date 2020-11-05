@@ -56,6 +56,24 @@ jobs:
           VolumeSizeParameter=8,
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
 
+  trigger-duckdns-deploy:
+    if: ${{ github.event.inputs.environment = 'production' }}
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Trigger DuckDNS repository_dispatch event
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/duckdns/dispatches \
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.inputs.environment }}"
+              }
+            }'
+
   trigger-api-deploy:
     needs: create
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
