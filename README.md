@@ -1,1 +1,1 @@
-# To-do app CloudFormation Stack Deployer
+# To-do app CloudFormation stack deployer
