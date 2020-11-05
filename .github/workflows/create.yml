@@ -57,7 +57,7 @@ jobs:
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
 
   trigger-duckdns-deploy:
-    if: ${{ github.event.inputs.environment = 'production' }}
+    if: ${{ github.event.inputs.environment == 'production' }}
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
       - name: Trigger DuckDNS repository_dispatch event
