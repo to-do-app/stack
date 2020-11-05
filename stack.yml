@@ -109,28 +109,6 @@ Resources:
           ToPort: 3000
           CidrIp: 0.0.0.0/0
 
-  MongoExpressSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref Vpc
-      GroupDescription: Enable access to Mongo Express via port 8081
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 8081
-          ToPort: 8081
-          CidrIp: 0.0.0.0/0
-
-  MongoSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref Vpc
-      GroupDescription: Enable access to MongoDB via port 27017
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 27017
-          ToPort: 27017
-          CidrIp: 0.0.0.0/0
-
   NetworkInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -139,8 +117,6 @@ Resources:
         - !Ref SshSecurityGroup
         - !Ref FeSecurityGroup
         - !Ref ApiSecurityGroup
-        - !Ref MongoExpressSecurityGroup
-        - !Ref MongoSecurityGroup
       SourceDestCheck: true
 
   ElasticIp:
