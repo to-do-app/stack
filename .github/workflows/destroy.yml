@@ -3,14 +3,14 @@ name: Manual destroy
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment'
-        required: true
-        default: 'production'
       region:
         description: 'AWS Region'
         required: true
         default: 'eu-central-1'
+      environment:
+        description: 'Environment'
+        required: true
+        default: 'production'
 
 jobs:
   destroy:
