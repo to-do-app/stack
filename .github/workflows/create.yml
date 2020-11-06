@@ -26,7 +26,6 @@ on:
 
 jobs:
   create:
-    name: Create stack
     runs-on: [self-hosted, builder]
     steps:
     - name: Checkout code
