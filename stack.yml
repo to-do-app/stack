@@ -87,15 +87,26 @@ Resources:
           ToPort: 22
           CidrIp: 0.0.0.0/0
 
-  FeSecurityGroup:
+  HttpSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref Vpc
-      GroupDescription: Enable access to the FE via port 80
+      GroupDescription: Enable to port 80
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  HttpsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref Vpc
+      GroupDescription: Enable to port 443
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
 
   ApiSecurityGroup:
@@ -115,7 +126,8 @@ Resources:
       SubnetId: !Ref Subnet
       GroupSet: 
         - !Ref SshSecurityGroup
-        - !Ref FeSecurityGroup
+        - !Ref HttpSecurityGroup
+        - !Ref HttpsSecurityGroup
         - !Ref ApiSecurityGroup
       SourceDestCheck: true
 
