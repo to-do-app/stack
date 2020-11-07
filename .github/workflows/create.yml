@@ -71,28 +71,6 @@ jobs:
             --restart unless-stopped \
             ghcr.io/linuxserver/duckdns
 
-  run-certbot:
-    if: ${{ github.event.inputs.environment == 'production' }}
-    needs: deploy-duckdns
-    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
-    steps:
-      - name: Run Certbot
-        run: |
-          docker run \
-            --rm \
-            --name certbot \
-            --volume "/etc/letsencrypt:/etc/letsencrypt" \
-            --volume "/var/lib/letsencrypt:/var/lib/letsencrypt" \
-            --publish 80:80 \
-            --publish 443:443 \
-            certbot/certbot \
-            certonly \
-              --standalone \
-              --non-interactive \
-              --agree-tos \
-              --email alvarogarciafer@gmail.com \
-              --domains todoapp.duckdns.org
-
   trigger-deploy-api:
     needs: run-certbot
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
