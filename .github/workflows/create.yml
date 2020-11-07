@@ -55,28 +55,12 @@ jobs:
           VolumeSizeParameter=8,
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
 
-  deploy-duckdns:
-    if: ${{ github.event.inputs.environment == 'production' }}
-    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
-    steps:
-      - name: Deploy DuckDNS
-        run: |
-          docker run \
-            --detach \
-            --name=duckdns \
-            --env TZ=Europe/Madrid \
-            --env SUBDOMAINS=todoapp.duckdns.org \
-            --env TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
-            --restart unless-stopped \
-            ghcr.io/linuxserver/duckdns
-
   run-certbot:
     if: ${{ github.event.inputs.environment == 'production' }}
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
       - name: Run Certbot
         run: |
-          sleep 30
           docker run \
             --rm \
             --name certbot \
@@ -91,6 +75,21 @@ jobs:
               --agree-tos \
               --email alvarogarciafer@gmail.com \
               --domains todoapp.duckdns.org
+
+  deploy-duckdns:
+    if: ${{ github.event.inputs.environment == 'production' }}
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Deploy DuckDNS
+        run: |
+          docker run \
+            --detach \
+            --name=duckdns \
+            --env TZ=Europe/Madrid \
+            --env SUBDOMAINS=todoapp.duckdns.org \
+            --env TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
+            --restart unless-stopped \
+            ghcr.io/linuxserver/duckdns
 
   trigger-deploy-api:
     needs: create
