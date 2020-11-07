@@ -72,7 +72,7 @@ jobs:
             ghcr.io/linuxserver/duckdns
 
   trigger-deploy-api:
-    needs: run-certbot
+    needs: create
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
       - name: Trigger API repository_dispatch event
@@ -91,7 +91,7 @@ jobs:
             }'
 
   trigger-deploy-front-end:
-    needs: run-certbot
+    needs: create
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
       - name: Trigger front-end repository_dispatch event
