@@ -76,6 +76,7 @@ jobs:
     steps:
       - name: Run Certbot
         run: |
+          sleep 30
           docker run \
             --rm \
             --name certbot \
