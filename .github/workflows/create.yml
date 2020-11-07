@@ -77,7 +77,6 @@ jobs:
       - name: Run Certbot
         run: |
           docker run \
-            -it \
             --rm \
             --name certbot \
             --volume "/etc/letsencrypt:/etc/letsencrypt" \
