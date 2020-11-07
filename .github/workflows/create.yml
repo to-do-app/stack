@@ -59,15 +59,38 @@ jobs:
     if: ${{ github.event.inputs.environment == 'production' }}
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
-      - name: Trigger DuckDNS repository_dispatch event
+      - name: Deploy DuckDNS
         run: |
-          docker run -d \
+          docker run \
+            --detach \
             --name=duckdns \
-            -e TZ=Europe/Madrid \
-            -e SUBDOMAINS=todoapp.duckdns.org \
-            -e TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
+            --env TZ=Europe/Madrid \
+            --env SUBDOMAINS=todoapp.duckdns.org \
+            --env TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
             --restart unless-stopped \
             ghcr.io/linuxserver/duckdns
+
+  deploy-certbot:
+    if: ${{ github.event.inputs.environment == 'production' }}
+    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    steps:
+      - name: Deploy Certbpt
+        run: |
+          docker run \
+            -it \
+            --rm \
+            --name certbot \
+            --volume "/etc/letsencrypt:/etc/letsencrypt" \
+            --volume "/var/lib/letsencrypt:/var/lib/letsencrypt" \
+            --publish 80:80 \
+            --publish 443:443 \
+            certbot/certbot \
+            certonly \
+              --standalone \
+              --non-interactive \
+              --agree-tos \
+              --email alvarogarciafer@gmail.com \
+              --domains todoapp.duckdns.org
 
   trigger-deploy-api:
     needs: create
