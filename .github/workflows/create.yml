@@ -91,7 +91,7 @@ jobs:
               --non-interactive \
               --agree-tos \
               --email alvarogarciafer@gmail.com \
-              --domains todoapp.duckdns.org
+              --domains todoapp.duckdns.org \
               --dry-run
 
   trigger-deploy-api:
