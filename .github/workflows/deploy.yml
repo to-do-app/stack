@@ -7,7 +7,6 @@ on:
 jobs:
   deploy-duckdns:
     if: ${{ github.event.client_payload.environment == 'production' }}
-    needs: create
     runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
     steps:
       - name: Deploy DuckDNS
