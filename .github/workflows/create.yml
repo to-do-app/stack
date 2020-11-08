@@ -79,6 +79,8 @@ jobs:
     steps:
       - name: Run Certbot
         run: |
+          mkdir --parents /etc/letsencrypt/live/todoapp.duckdns.org
+          mkdir /var/lib/letsencrypt
           docker run \
             --rm \
             --name certbot \
