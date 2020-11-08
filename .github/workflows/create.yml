@@ -19,8 +19,8 @@ on:
         description: 'API tag'
         required: true
         default: latest
-      front-end-tag:
-        description: 'Front-end tag'
+      fe-tag:
+        description: 'FE tag'
         required: true
         default: latest
 
@@ -115,21 +115,21 @@ jobs:
               }
             }'
 
-  trigger-deploy-front-end:
+  trigger-deploy-fe:
     needs: run-certbot
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
-      - name: Trigger front-end repository_dispatch event
+      - name: Trigger FE repository_dispatch event
         run: |
           curl \
             -X POST \
             --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             --header "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/to-do-app/front-end/dispatches \
+            https://api.github.com/repos/to-do-app/fe/dispatches \
             --data '{
               "event_type":"deploy",
               "client_payload": {
                 "environment": "${{ github.event.inputs.environment }}",
-                "tag": "${{ github.event.inputs.front-end-tag }}"
+                "tag": "${{ github.event.inputs.fe-tag }}"
               }
             }'
