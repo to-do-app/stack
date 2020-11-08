@@ -31,4 +31,4 @@ jobs:
     - name: Destroy stack
       run: |
         aws cloudformation delete-stack \
-          --stack-name stack-to-do-app-${{ github.event.inputs.environment }}
+          --stack-name stack-todoapp-${{ github.event.inputs.environment }}

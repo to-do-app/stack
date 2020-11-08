@@ -145,7 +145,7 @@ Resources:
   Policy: 
     Type: AWS::IAM::Policy
     Properties: 
-      PolicyName: role-to-do-app
+      PolicyName: role-todoapp
       PolicyDocument: 
         Version: 2012-10-17
         Statement: 

@@ -16,11 +16,11 @@ on:
         required: true
         default: 'production'
       api-tag:
-        description: 'API tag or version'
+        description: 'API tag'
         required: true
         default: latest
       front-end-tag:
-        description: 'Front-end tag or version'
+        description: 'Front-end tag'
         required: true
         default: latest
 
@@ -42,7 +42,7 @@ jobs:
     - name: Create stack
       uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
       with:
-        name: stack-to-do-app-${{ github.event.inputs.environment }}
+        name: stack-todoapp-${{ github.event.inputs.environment }}
         template: stack.yml
         no-fail-on-empty-changeset: "1"
         disable-rollback: "1"
@@ -75,14 +75,15 @@ jobs:
     if: ${{ github.event.inputs.environment == 'production' }}
     needs: deploy-duckdns
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
+    continue-on-error: true
     steps:
       - name: Run Certbot
         run: |
           docker run \
             --rm \
             --name certbot \
-            --volume "/etc/letsencrypt:/etc/letsencrypt" \
-            --volume "/var/lib/letsencrypt:/var/lib/letsencrypt" \
+            --mount type=bind,source=/etc/letsencrypt,target=/etc/letsencrypt \
+            --mount type=bind,source=/var/lib/letsencrypt,target=/var/lib/letsencrypt \
             --publish 80:80 \
             --publish 443:443 \
             certbot/certbot \
@@ -91,8 +92,7 @@ jobs:
               --non-interactive \
               --agree-tos \
               --email alvarogarciafer@gmail.com \
-              --domains todoapp.duckdns.org \
-              --dry-run
+              --domains todoapp.duckdns.org
 
   trigger-deploy-api:
     needs: run-certbot
