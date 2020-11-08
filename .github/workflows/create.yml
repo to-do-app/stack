@@ -69,7 +69,7 @@ jobs:
             --data '{
               "event_type":"deploy",
               "client_payload": {
-                "environment": "${{ github.event.inputs.environment }}",,
+                "environment": "${{ github.event.inputs.environment }}",
                 "api-tag": "${{ github.event.inputs.api-tag }}",
                 "fe-tag": "${{ github.event.inputs.fe-tag }}"
               }
