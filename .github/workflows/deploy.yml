@@ -1,0 +1,94 @@
+name: Deploy
+
+on:
+  repository_dispatch:
+    types: [deploy]
+
+jobs:
+  deploy-duckdns:
+    if: ${{ github.event.client_payload.environment == 'production' }}
+    needs: create
+    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
+    steps:
+      - name: Deploy DuckDNS
+        run: |
+          docker run \
+            --detach \
+            --name=duckdns \
+            --env TZ=Europe/Madrid \
+            --env SUBDOMAINS=todoapp.duckdns.org \
+            --env TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
+            --restart unless-stopped \
+            ghcr.io/linuxserver/duckdns
+
+  run-certbot:
+    if: ${{ github.event.client_payload.environment == 'production' }}
+    needs: deploy-duckdns
+    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
+    continue-on-error: true
+    steps:
+      - name: Run Certbot
+        run: |
+          mkdir --parents /etc/letsencrypt/live/todoapp.duckdns.org
+          mkdir /var/lib/letsencrypt
+          docker run \
+            --rm \
+            --name certbot \
+            --mount type=bind,source=/etc/letsencrypt,target=/etc/letsencrypt \
+            --mount type=bind,source=/var/lib/letsencrypt,target=/var/lib/letsencrypt \
+            --publish 80:80 \
+            --publish 443:443 \
+            certbot/certbot \
+            certonly \
+              --standalone \
+              --non-interactive \
+              --agree-tos \
+              --email alvarogarciafer@gmail.com \
+              --domains todoapp.duckdns.org
+
+  create-docker-network:
+    needs: run-certbot
+    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
+    steps:
+      - name: Create docker network
+        run: |
+          docker network create \
+            network-todoapp
+
+  trigger-deploy-api:
+    needs: create-docker-network
+    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
+    steps:
+      - name: Trigger API deployment
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/api/dispatches \
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.client_payload.environment }}",
+                "tag": "${{ github.event.client_payload.api-tag }}"
+              }
+            }'
+
+  trigger-deploy-fe:
+    needs: create-docker-network
+    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
+    steps:
+      - name: Trigger FE deployment
+        run: |
+          curl \
+            -X POST \
+            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/to-do-app/fe/dispatches \
+            --data '{
+              "event_type":"deploy",
+              "client_payload": {
+                "environment": "${{ github.event.client_payload.environment }}",
+                "tag": "${{ github.event.client_payload.fe-tag }}"
+              }
+            }'

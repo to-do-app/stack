@@ -55,81 +55,22 @@ jobs:
           VolumeSizeParameter=8,
           OrgAccessTokenParameter=${{ secrets.ORG_ACCESS_TOKEN }}
 
-  deploy-duckdns:
-    if: ${{ github.event.inputs.environment == 'production' }}
+  trigger-deploy:
     needs: create
     runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
     steps:
-      - name: Deploy DuckDNS
-        run: |
-          docker run \
-            --detach \
-            --name=duckdns \
-            --env TZ=Europe/Madrid \
-            --env SUBDOMAINS=todoapp.duckdns.org \
-            --env TOKEN=${{ secrets.DUCKDNS_TOKEN }} \
-            --restart unless-stopped \
-            ghcr.io/linuxserver/duckdns
-
-  run-certbot:
-    if: ${{ github.event.inputs.environment == 'production' }}
-    needs: deploy-duckdns
-    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
-    continue-on-error: true
-    steps:
-      - name: Run Certbot
-        run: |
-          mkdir --parents /etc/letsencrypt/live/todoapp.duckdns.org
-          mkdir /var/lib/letsencrypt
-          docker run \
-            --rm \
-            --name certbot \
-            --mount type=bind,source=/etc/letsencrypt,target=/etc/letsencrypt \
-            --mount type=bind,source=/var/lib/letsencrypt,target=/var/lib/letsencrypt \
-            --publish 80:80 \
-            --publish 443:443 \
-            certbot/certbot \
-            certonly \
-              --standalone \
-              --non-interactive \
-              --agree-tos \
-              --email alvarogarciafer@gmail.com \
-              --domains todoapp.duckdns.org
-
-  trigger-deploy-api:
-    needs: run-certbot
-    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
-    steps:
-      - name: Trigger API repository_dispatch event
+      - name: Trigger app deployment
         run: |
           curl \
             -X POST \
             --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             --header "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/to-do-app/api/dispatches \
+            https://api.github.com/repos/to-do-app/stack/dispatches \
             --data '{
               "event_type":"deploy",
               "client_payload": {
-                "environment": "${{ github.event.inputs.environment }}",
-                "tag": "${{ github.event.inputs.api-tag }}"
-              }
-            }'
-
-  trigger-deploy-fe:
-    needs: run-certbot
-    runs-on: [self-hosted, "${{ github.event.inputs.environment }}"]
-    steps:
-      - name: Trigger FE repository_dispatch event
-        run: |
-          curl \
-            -X POST \
-            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
-            --header "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/to-do-app/fe/dispatches \
-            --data '{
-              "event_type":"deploy",
-              "client_payload": {
-                "environment": "${{ github.event.inputs.environment }}",
-                "tag": "${{ github.event.inputs.fe-tag }}"
+                "environment": "${{ github.event.inputs.environment }}",,
+                "api-tag": "${{ github.event.inputs.api-tag }}"
+                "fe-tag": "${{ github.event.inputs.fe-tag }}"
               }
             }'
