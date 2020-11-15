@@ -19,8 +19,8 @@ on:
         description: 'API tag'
         required: true
         default: latest
-      fe-tag:
-        description: 'FE tag'
+      frontend-tag:
+        description: 'Frontend tag'
         required: true
         default: latest
 
@@ -71,6 +71,6 @@ jobs:
               "client_payload": {
                 "environment": "${{ github.event.inputs.environment }}",
                 "api-tag": "${{ github.event.inputs.api-tag }}",
-                "fe-tag": "${{ github.event.inputs.fe-tag }}"
+                "frontend-tag": "${{ github.event.inputs.frontend-tag }}"
               }
             }'
