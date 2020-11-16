@@ -46,7 +46,7 @@ jobs:
   #             --domains todoapp.duckdns.org
 
   create-docker-network:
-    needs: run-certbot
+    needs: deploy-duckdns
     runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
     steps:
       - name: Create docker network
