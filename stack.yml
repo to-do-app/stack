@@ -120,17 +120,6 @@ Resources:
           ToPort: 3000
           CidrIp: 0.0.0.0/0
 
-  FrontendSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref Vpc
-      GroupDescription: Enable access to the frontend via port 3001
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3001
-          ToPort: 3001
-          CidrIp: 0.0.0.0/0
-
   NetworkInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -140,7 +129,6 @@ Resources:
         - !Ref HttpSecurityGroup
         - !Ref HttpsSecurityGroup
         - !Ref ApiSecurityGroup
-        - !Ref FrontendSecurityGroup
       SourceDestCheck: true
 
   ElasticIp:
