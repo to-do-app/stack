@@ -91,21 +91,3 @@ jobs:
                 "tag": "${{ github.event.client_payload.frontend-tag }}"
               }
             }'
-
-  trigger-deploy-nginx:
-    needs: create-docker-network
-    runs-on: [self-hosted, "${{ github.event.client_payload.environment }}"]
-    steps:
-      - name: Trigger NGINX deployment
-        run: |
-          curl \
-            -X POST \
-            --header "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
-            --header "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/to-do-app/nginx/dispatches \
-            --data '{
-              "event_type":"deploy",
-              "client_payload": {
-                "environment": "${{ github.event.client_payload.environment }}"
-              }
-            }'
